@@ -1,0 +1,10 @@
+Scenario: 
+	The XYZ Retail would like to have a functionality to iterate through every second or third item in the basket to
+	randomly collect some statistics on price.
+	
+Solution: 
+	This can be implemented by applying the iterator design pattern.
+
+Iterator pattern: 
+	Provides a way to access the elements of an aggregate object without exposing its underlying
+	implementation.

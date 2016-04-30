@@ -1,0 +1,5 @@
+Builder pattern: 
+	The subtle difference between the builder pattern and the factory pattern is that in builder pattern, the
+	user is given the choice to create the type of object he/she wants but the construction process is the same. But
+	with the factory method pattern the factory decides how to create one of several possible classes based on data
+	provided to it.

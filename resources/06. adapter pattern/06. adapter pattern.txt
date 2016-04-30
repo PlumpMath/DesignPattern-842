@@ -1,0 +1,38 @@
+어댑터 패턴(Adapter pattern)은 클래스의 인터페이스를 사용자가 기대하는 다른 인터페이스로 변환하는 패턴으로, 
+호환성이 없는 인터페이스 때문에 함께 동작할 수 없는 클래스들이 함께 작동하도록 해준다.
+ interface를 교체하는 대신 Adapter를 도입
+
+Scenario: 
+	So far so good, for illustration purpose if you need to adapt the strategy class to the CountDecorator class so
+	that you do not have to explicitly cast your strategy classes to CountDecorator as shown in bold arrow in the class
+	Shopping . We can overcome this by slightly rearranging the classes. The class CountDecorator has two additional
+	methods count() and reset(). If you only just add these methods to the interface CheckStrategy then the classes
+	LongerThan15 and StartsWithCD should provide an implementation for these two methods. These two methods make no
+	sense in these two classes.
+	
+Solution:
+	So, to overcome this you can introduce an adapter class named CheckStrategyAdapter, which just provides a
+	bare minimum default implementation. Adapter design pattern
+	
+But du patron Adapter
+    - Changer des opéations
+    	en réemployant des méthods existantes
+    - Catégorie : structure
+    	les opérations font en effet partie de la structure
+    	à ne pas confondre avec les méthodes
+   
+Target
+	- I'interface qui définit les nouvelles opérations
+
+Adaptee
+	- les anciennes opérations et leurs méthods
+	- accédé par délégation (variante : accès par héritage)
+	
+Client
+	- accès aux methods en employant les nouvelles opérations
+	- ignore l'existence des anciennes opérations
+	
+Adapter
+	- met œuvre l'interface Target et réalise les méthodes par délégation
+	- effectue toutes les conversions nécessaires
+    

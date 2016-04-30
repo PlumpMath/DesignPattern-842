@@ -1,0 +1,38 @@
+Scenario: 
+	The XYZ Retail also requires a piece of code, which performs different operations depending on the type of
+	item. If the item is an instance of CD then you call a method to print its catalog number. If the item is an instance of
+	Cosmetics then you call a related but different method to print its color code. If the item is an instance of Book then you
+	call a separate method to print its ISBN number. One way of implementing this is using the Java constructs instanceof
+	and explicit type casting as shown below:
+	// -----------------------------------------------
+	it = builder.getIterator();
+	while(it.hasNext(); ) {
+		String name = null;
+		Item item = (Item)iter.next();
+		if(item instanceof CD) {
+			((CD) item). markWithCatalogNumber();
+		} else if (item instanceof Cosmetics) {
+			((Cosmetics) item). markWithColourCode ();
+		} else if (item instanceof Book) {
+			((Book) item). markWithISBNNumber();
+		}
+	}
+	// -----------------------------------------------
+	
+Problem: 
+	The manipulation of a collection of polymorphic objects with the constructs typecasts and instanceof as
+	shown above can get messy and unmaintainable with large elseif constructs and these constructs in frequently accessed
+	methods/ loops can adversely affect performance. 
+
+Solution: 
+	You can apply the visitor design pattern to avoid using
+	these typecast and “instanceof” constructs as shown below:
+
+Visitor pattern: 
+	The visitor pattern makes adding new operations easy and all the related operations are localized in a
+	visitor. The visitor pattern allows you to manipulate a collection of polymorphic objects without the messy and
+	unmaintainable typecasts and instanceof operations. Visitor pattern allows you to add new operations, which affect a
+	class hierarchy without having to change any of the classes in the hierarchy. For example we can add a
+	GoodsDebugVisitor class to have the visitor just print out some debug information about each item visited etc. In fact
+	you can write any number of visitor classes for the Goods hierarchy e.g. GoodsLabellingVisitor , GoodsPackingVisitor
+	etc .

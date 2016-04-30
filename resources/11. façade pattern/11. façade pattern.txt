@@ -1,0 +1,13 @@
+Scenario: 
+	The purchasing staffs (aka logistics staff) of the XYZ Retail Company need to interact with other
+	subsystems in order to place purchase orders. They need to communicate with their stock control department to
+	determine the stock levels, also need to communicate with their wholesale supplier to determine availability of stock and
+	finally with their bank to determine availability of sufficient funds to make a purchase.
+
+Solution: 
+	You can apply the façade design pattern to implement the above scenario.
+
+Façade pattern: 
+	The façade pattern provides an interface to large subsystems of classes. A common design goal is to
+	minimize the communication and dependencies between subsystems. One way to achieve this goal is to introduce a
+	façade object that provides a single, simplified interface.

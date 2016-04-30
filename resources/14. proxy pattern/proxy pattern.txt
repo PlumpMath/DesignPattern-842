@@ -1,0 +1,52 @@
+Scenario: 
+	The XYZ Retail has a 3 rd party software component called XYZPriceList , which implements an interface
+	PriceList. This 3 rd party software component is not thread-safe. So far it performed a decent job since only the sales
+	manager had access to this software component. The XYZ Retail now wants to provide read and write access to all the
+	managers. The source code is not available and only the API is available, so modifying the existing component is not
+	viable. This will cause a dirty read problem if two managers try to concurrently access this component. For example, if the
+	sales manager tries to access an item’s price while the logistics manger is modifying the price (say modification takes 1
+	second), then the sales manager will be reading the wrong value. Let’s look at this with a code sample:
+	
+The output is:
+---------------Accessing the price list---------------------------
+The price of the itemId 1 = 12.0
+wait while mutating price from 12.0 to 15.00 ...........
+The price of the itemId 1 = -1.0
+OR
+---------------Accessing the price list---------------------------
+wait while mutating price from 12.0 to 15.00 ...........
+The price of the itemId 1 = -1.0
+The price of the itemId 1 = -1.0
+
+Problem: 
+	You get one of the two outputs shown above depending on how the threads initialized by the operating system.
+	The first value of 12.0 is okay and the second value of 12.0 again is a dirty read because the value should have been
+	modified to 15.0 by the user-2. So the user-1 reading the value for the second time should get the value of 15.0 after it
+	has been modified.
+	
+Solution: 
+	This threading issue and inability to modify the existing component can be solved by applying the proxy
+	design pattern. You will be writing a proxy class, which will apply the locking for the entries in the XYZPriceList. This
+	proxy class internally will be making use of the XYZPriceList in a synchronized fashion as shown below:
+
+Proxy pattern: 
+	Provides a surrogate or placeholder for another object to control access to it. Proxy object acts as an
+	intermediary between the client and the target object. The proxy object has the same interface as the target object. The
+	proxy object holds reference to the target object. There are different types of proxies:
+	
+	- Remote Proxy: provides a reference to an object, which resides in a separate address space. e.g. EJB, RMI, CORBA
+	  etc (RMI stubs acts as a proxy for the skeleton objects.)
+	- Virtual Proxy: Allows the creation of memory intensive objects on demand. The target object will not be created until
+	  it is really needed.
+	- Access Proxy: Provides different clients with different access rights to the target object.
+
+Example : 
+	In Hibernate framework (Refer Q15 - Q16 in Emerging Technologies/Frameworks section) lazy loading of
+	persistent objects are facilitated by virtual proxy pattern. Say you have a Department object, which has a collection of
+	Employee objects. Let’s say that Employee objects are lazy loaded. If you make a call department.getEmployees() then
+	Hibernate will load only the employeeIDs and the version numbers of the Employee objects, thus saving loading of
+	individual objects until later. So what you really have is a collection of proxies not the real objects. The reason being, if
+	you have hundreds of employees for a particular department then chances are good that you will only deal with only a few
+	of them. So, why unnecessarily instantiate all the Employee objects? This can be a big performance issue in some
+	situations. So when you make a call on a particular employee i.e. employee.getName() then the proxy loads up the real
+	object from the database.

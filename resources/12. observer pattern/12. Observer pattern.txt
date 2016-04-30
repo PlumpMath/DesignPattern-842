@@ -1,0 +1,10 @@
+Scenario: 
+	The purchasing department also requires functionality where, when the stock control system is updated, all the
+	registered departmental systems like logistics and sales should be notified of the change.
+
+Solution: 
+	This can be achieved by applying the observer design pattern as shown below:
+
+Observer pattern: 
+	defines a one-to-many dependency between objects so that when one object changes state, all its
+	dependents are notified and updated automatically. (aka publish-subscribe pattern)

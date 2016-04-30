@@ -1,0 +1,244 @@
+Encapsulation
+	• An object must master what happens to its own data (attributes)
+	• Every action on attributes (read, update) must go through the methods of the object
+	• In this part we will show how to ensure this
+	
+Rule #EJ13
+Minimize accessibility
+	• Rule: make each type or attribute as unaccessible as possible
+	• if using private does not break your code, use it!
+	
+Access levels in Java
+	• private
+		-> no access for subclasses, good idea for attributes 
+	• (nothing: defaults to package private)
+		->code in the same package has access
+		->do not use: trust no one
+	• protected
+		-> subclasses and package have access
+		-> do not use for attributes
+	•public
+		-> NEVER EVER use it for attributes
+		
+API and accessibility
+	• Protected and public items (interfaces, classes,
+	  attributes, operations) are part of your API (application
+	  programming interface)
+		-> So be very careful
+		-> protected items are also part of implementation:
+		dangerous
+	•private and package private are implementation details
+		->They are not published in the API
+		
+Rule #EJ14
+	• attributes must be private
+	• therefore one needs accessors
+		-> getSomething(), setSomething(...)
+	• this way you keep control of your data
+
+Accessors pitfalls
+	• What is wrong with this code?
+	class A {
+		private B b;
+		public A getB(){
+			return this.b
+		}
+	}
+	
+Careful with references	
+
+	• if your return a reference of an attribute make
+	  sure the type is immutable (no setSomething
+	  operations)
+	  
+	• otherwise third party code can change the
+	  attribute state
+	  
+	• sometimes this is ok because it is planned
+	  carefully (eg using an Observer design
+	  pattern)	
+	
+Examples	
+	int getSize() { return this.size; }
+		-> // OK, it’s a copy (int values are not objects)
+	String getName() { return this.name; }
+		-> // OK, it’s a reference to an immutable class
+	B getB() { return this.b; }
+		-> // WARNING: b may be modified surreptitiously elsewhere
+
+The Collection problem
+	• Collections are a well-known problem for encapsulation
+	• It is easy to break encapsulation
+		-> This can lead to hair pulling bugs
+	• We will see several solutions for this	
+	
+The bad
+	• What’s wrong with the following code?	
+	class Broken{
+		private Collection myCol;
+		Collection getMyCol(){
+			return this.myCol;
+		}
+	}
+	
+Encapsulation is broken	
+	• Client code example	
+	
+	Broken o = ...;
+	Collection c = o.getMyCol();
+	c.add(...); c.remove(...);
+	// o.myCol has changed without control from o
+	
+Ways to protect encapsulation	
+	• Return a copy of the internal object
+	• Return an immutable object
+	• Add your own control operations to the returned object	
+	
+Example for collections
+	class ColExample{
+		private Collection<String> myCol;
+		public Iterator<String> getIterator(){
+			return this.myCol.iterator();
+		}
+		// no getMyCol operation => read only
+	}	
+
+Rule #EJ52
+Use interfaces for object reference	
+	• To use an object you don’t need to know its concrete class
+		-> Collection<String> col = .......;
+		// col initialised from somewhere
+		-> col.add(“Hello”); // We don’t know the
+		   class and we are happy with that!
+		
+Use interfaces everywhere
+
+Rule #EJ18
+Interfaces are better than abstract classes
+	• In Java you can do multiple inheritance
+	  with interfaces (operation inheritance)
+	• Single inheritance for methods
+	• If you provide an abstract class you force
+	  an implementation decision on your users	
+
+When to use abstract classes?	
+	• To provide a partial implementation that users must finish
+	• This requires a very good documentation of how the subclasses must cooperate
+	• or else everything can break easily (see rule #EJ16 later)
+	  
+Rule #EJ16
+avoid method inheritance	  
+	• We like method inheritance because it
+	  should provide powerful reuse means
+		-> yes but method inheritance breaks
+	       encapsulation
+	       
+Example
+	class A{
+		protected void doit(){
+			otherStuff();
+		}
+		protected void otherStuff(){
+			System.err.println(“A::otherStuff() called”);
+			importantThing();
+		}
+	} 
+	
+	class B extends A{
+		@Override
+		protected void doit(){
+			super.doit();
+			newThings();
+		}
+		@Override
+		protected void otherStuff(){
+			System.err.println(“B::otherStuff() called”);
+		}
+	}  
+What will be printed?
+	-> B::otherStuff() called” will be printed		  
+	• Implementation of A::doIt() will break (no call to super.otherStuff in B)
+	• Now a perfectly alright A class can be broken by a simple extension
+	  
+More problems
+	• Suppose that B is carefully written, A is carefully documented, both well tested
+	• Now A is modified (eg new operations,
+	  slight change in algorithm, etc)
+		-> B must be modified (fragile base class problem)
+		-> in the mean time B is silently broken!	
+	  
+Consequence of this
+	• Think twice before choosing method inheritance over composition (see later)
+	• If you are maintaining class A then you can extend A with B (carefully)
+	• Do not extend a library class (unless it has been designed for that)
+	• Document inheritance possibilities of a class (ie internal details!)
+		-> or else forbid inheritance completely  
+	  
+Use @Override
+	• Use @Override annotation for an operation	  
+		-> This helps the compiler to spot incorrect redefinition of operations
+	• Concretely, an operation definition that states @Override will not be mistaken for
+	  an overloading by the compiler. 
+	  
+Using composition	  
+	• The idea is that you reuse code not by extending it but by calling it (delegation)
+	• therefore you only need to know an interface
+	  
+What is the API	  
+	• This is the public part 
+		-> public types (interfaces, some implementation classes)
+		-> public operations (signatures, constraints, exceptions)
+	• Writing the interfaces, operations, constraints, etc is the first step of design  
+	  
+Rule #EJ38
+Check parameter validity
+	• This is in line with the contract-based design (CBD)	  
+	• For each operation provide
+		-> the preconditions
+		-> the postconditions  
+	  
+Preconditions
+	• An operation call is allowed only if all preconditions evaluate to true
+	• If at least one precondition is false than the operation can do anything
+	• This is a fault by the caller, not the operation implementer	
+	
+Postconditions
+	• If all preconditions are true, then execution of the operation’s method must
+	  bring the object to a state where all postconditions are true
+	• else this is a bug and it the implementer’s fault  
+	  
+Design by contract	  
+	• A contract is the set of preconditions and postconditions for an operation
+	• Contract stake holders: caller and callee
+	• The caller is responsible for ensuring that the preconditions are satisfied
+	• The callee is responsible for ensuring that the postconditions are satisfied 
+	  if the preconditions are satisfied	  
+	  
+In Java	  
+	• Document the preconditions of each operation together with what happens when a
+	  precondition is not satisfied, for each precondition
+	• Document the postconditions & effects of each operation
+	• Write code that checks for the preconditions and signals problems to the caller	  
+	  
+Remark on checks	  
+	• If a precondition involves a parameter, make a copy of the parameter before checking
+	• The semantics of the precondition is that it must be evaluated instantaneously at
+	  the beginning of the method	  
+	  
+Rule #EJ61
+Manage exception abstraction	   
+	• Software is often organized in layers (low level services to high level services)
+	• If a low level service throws an exception, it must be caught in the middle level	  
+		-> either the problem is dealt with there
+		-> or the problem cannot be fixed at middle level
+		-> in this case catch and throw a middle level exception
+	  
+Example	  
+	• Three layers L1 to L3 
+	• L1 catches a file read error exception
+	• L1 throws an exception that describes the context of the read error using concepts at
+	  the L1 level (eg database index read error)
+	• L2 catches this and translates it into name search error, and so on...  
+	  
+	  
+	  	

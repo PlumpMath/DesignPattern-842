@@ -1,0 +1,21 @@
+Scenario: 
+	The XYZ Retail buys the items in bulk from warehouses and sells them in their retail stores. All the items sold
+	need to be prepared for retail prior to stacking in the shelves for trade. The preparation involves 3 steps for all types of
+	items, i.e. adding the items to stock in the database, applying barcode to each item and finally marking retail price on the
+	item. The preparation process is common involving 3 steps but each of these individual steps is specific to type of item
+	i.e. Book , CD , and Cosmetics .
+	
+	adding the items --> applying bar-code --> making retail price
+
+Solution: 
+	The above functionality can be implemented applying the template method design pattern as shown below:
+	
+Template method pattern: 
+	When you have a sequence of steps to be processed within a method and you want to defer
+	some of the steps to its subclass then you can use a template method pattern. So the template method lets the subclass
+	to redefine some of the steps.
+
+Example :
+	Good example of this is the process() method in the Struts RequestProcessor class, which executes a
+	sequence of processXXXX(...) methods allowing the subclass to override some of the methods when required. Refer
+	Q110 in Enterprise section.

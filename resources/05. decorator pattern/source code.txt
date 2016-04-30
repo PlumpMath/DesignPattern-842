@@ -1,0 +1,47 @@
+public interface CheckStrategy {
+	public boolean check(String word);
+}
+
+public class CountDecorator extends CheckStrategy {
+	private CheckStrategy cs = null;
+	private int count = 0;
+
+	public CountDecorator(CheckStrategy cs) {
+		this.cs = cs;
+	}
+
+	public boolean check(String description) {
+		boolean isFound = cs.check(description);
+		if (isFound)
+			this.count++;
+		return isFound;
+	}
+
+	public int count() {
+		return this.count;
+	}
+
+	public void reset() {
+		this.count = 0;
+	}
+}
+
+TEST code 
+
+Iterator it = builder.getIterator();
+boolean bol = false;
+CheckStrategy strategy = null;
+it = builder.getIterator();
+
+//for starting with CD
+strategy = new StartsWithCD();
+strategy = new CountDecorator(strategy);
+while (it.hasNext()) {
+Item item = (Item) it.next();
+bol = strategy.check(item.getDescription());
+System.out.println("\n" + item.getDescription() + " --> " + bol);
+}
+System.out.println("No of descriptions starts with CD -->" +
+((CountDecorator) strategy).count());
+
+

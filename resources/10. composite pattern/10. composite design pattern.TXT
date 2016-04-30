@@ -1,0 +1,12 @@
+Scenario: 
+	The employees of XYZ Retail are at various levels. In a hierarchy, the general manager has subordinates, and
+	also the sales manager has subordinates. The retail sales staffs have no subordinates and they report to their immediate
+	manager. The company needs functionality to calculate salary at different levels of the hierarchy.
+
+Solution: 
+	You can apply the composite design pattern to represent the XYZ Retail company employee hierarchy.
+	
+Composite design pattern: 
+	The composite design pattern composes objects into tree structures where individual
+	objects like sales staff and composite objects like managers are handled uniformly. Refer Q61 in Java section or Q25 in
+	Enterprise section.

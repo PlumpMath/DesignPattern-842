@@ -1,0 +1,13 @@
+Scenario: 
+	The XYZ Retail wants to evaluate a strategy to determine items with description longer than 15 characters
+	because it won’t fit in the invoice and items with description starting with “CD” to add piracy warning label.
+
+Solution: 
+	You can implement evaluating a strategy to determine items with description longer than 15 characters and
+	description starting with “CD” applying the strategy design pattern as shown below:
+
+Strategy pattern: 
+	The Strategy pattern lets you build software as a loosely coupled collection of interchangeable parts, in
+	contrast to a monolithic, tightly coupled system. Loose coupling makes your software much more extensible,
+	maintainable, and reusable. The main attribute of this pattern is that each strategy encapsulates algorithms i.e. it is not
+	data based but algorithm based. Refer Q12, Q64 in Java section.

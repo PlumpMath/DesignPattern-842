@@ -1,0 +1,97 @@
+
+
+public interface PriceList {
+	public double getPrice(int itemId) ;
+	public void setPrice(int itemId,double newPrice) ;
+}
+
+public class XYZPriceList implements PriceList{
+
+	private static final Map mapPrices = new HashMap(30,.075f);
+	public static PriceList singleInstance = new XYZPriceList();//only one instance
+	
+	/**
+	* static initializer block
+	*/
+	static {
+		//only one item is added to keep it simple
+		mapPrices.put(new Integer(1), new Double(12.00));//Book - IT
+		//... add more items to price list
+	}
+	
+	public static PriceList getInstance() {
+		return singleInstance;
+	}
+	
+	public double getPrice(int itemId) {
+		double price = ((Double)mapPrices.get(new Integer(itemId))).doubleValue();
+		System.out.println("The price of the itemId " + itemId + " = "+ price);
+		return price;
+	}
+	
+	public void setPrice(int itemId,double newPrice) {
+		System.out.println("wait while mutating price from 12.0 to 15.00 ...........");
+		try {
+			// transient value while updating with a proper value, just to illustrate the effect
+			// of concurrent access
+			mapPrices.put(new Integer(itemId),new Double(-1));
+			Thread.sleep(1000);//assume update/set operation takes 1 second
+			mapPrices.put(new Integer(itemId),new Double(newPrice));
+		} catch (InterruptedException ie) {}
+	}
+}
+
+public class PriceListUser implements Runnable {
+	int itemId;
+	double price;
+	static int count = 0;
+	public PriceListUser(int itemId) {
+		this.itemId = itemId;
+	}
+	/**
+	* runnable code where multi-threads are executed
+	*/
+	public void run() {
+		String name = Thread.currentThread().getName();
+		if (name.equals("accessor")) {
+			price = XYZPriceList.getInstance().getPrice(itemId); //using 3 rd party commponent
+		} else if (name.equals("mutator")) {
+			XYZPriceList.getInstance().setPrice(itemId, 15.00); //using 3 rd party commponent
+		}
+	}
+}
+
+public class Shopping {
+//....
+	public static void process() throws ItemException {
+		//..........
+		//------------------------------------proxy design pattern------------------------------
+		System.out.println("---------------Accessing the price list---------------------------");
+		PriceListUser user1 = new PriceListUser(1);//accessing same itemId=1
+		PriceListUser user2 = new PriceListUser(1);//accessing same itemId=1
+		Thread t1 = new Thread(user1);
+		Thread t2 = new Thread(user2);
+		Thread t3 = new Thread(user1);
+		t1.setName("accessor");//user 1 reads the price
+		t2.setName("mutator");//user 2 modifies the price
+		t3.setName("accessor");//user 1 reads the price
+		t1.start(); // accessor user-1 reads before mutator user-2 modifies the price as 12.00
+		t2.start(); // mutator user-2 sets the price to 15.00
+		t3.start(); // while the user-2 is setting the price to 15.00 user-1 reads again and gets the
+		// price as 12.00
+		//user-2 gets the wrong price i.e gets 12.0 again instead of 15.00
+	}
+}
+
+---------------Accessing the price list---------------------------
+The price of the itemId 1 = 12.0
+wait while mutating price from 12.0 to 15.00 ...........
+The price of the itemId 1 = -1.0
+OR
+---------------Accessing the price list---------------------------
+wait while mutating price from 12.0 to 15.00 ...........
+The price of the itemId 1 = -1.0
+The price of the itemId 1 = -1.0
+
+
+

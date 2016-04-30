@@ -1,0 +1,15 @@
+Scenario: 
+	A company named XYZ Retail is in the business of selling Books , CDs and Cosmetics . Books are sales tax
+	exempt and CDs and Cosmetics have a sales tax of 10%. CDs can be imported and attracts an import tax of 5%. Write a
+	shopping basket program, which will calculate extended price (qty * (unitprice + tax)) inclusive of tax for each item in the
+	basket, total taxes and grand total.
+	
+Solution: 
+	Sample code for the items (i.e. Goods) sold by XYZ Retail. Let’s define an Item interface to follow the design
+	principle of code to an interface not to an implementation.
+	
+Alternative solution: 
+	Alternatively, instead of using inheritance, we can use object composition to achieve code
+	reuse as discussed in Q10 in Java section. If you were to use object composition instead of inheritance, you would have
+	classes Book , CD and Cosmetics implementing the Item interface directly ( Goods class would not be required), and make
+	use of a GoodsHelper class to achieve code reuse through composition.

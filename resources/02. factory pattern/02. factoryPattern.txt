@@ -1,0 +1,25 @@
+Factory method pattern: 
+	The factory method patterns consist of a product class hierarchy and a creator class hierarchy.
+	To create the items shown above we could use the factory method pattern as described in
+	Q52 in Java section. We would also implement the factory class as a singleton using the singleton design pattern as
+	described in Q51 in Java section. The factory method design pattern instantiates a class in a more flexible way than
+	directly calling the constructor. It loosely couples your calling code from the Items it creates like CD , Book , etc. Let’s look
+	at why factory method pattern is more flexible:
+	
+	- Sometimes factory methods have to return a single instance of a class instead of creating new objects each time or
+	return an instance from a pool of objects.
+
+	- Factory methods have to return a subtype of the type requested. It also can request the caller to refer to the returned
+	object by its interface rather than by its implementation, which enables objects to be created without making their
+	implementation classes public.
+
+	- Sometimes old ways of creating objects can be replaced by new ways of creating the same objects or new classes
+	can be added using polymorphism without changing any of the existing code which uses these objects. For example:
+	Say you have a Fruit abstract class with Mango and Orange as its concrete subclasses, later on you can add an
+	Apple subclass without breaking the code which uses these objects.
+
+Abstract factory pattern: 
+	This pattern is one level of abstraction higher than the factory method pattern because you
+	have an abstract factory (or factory interface) and have multiple concrete factories. Abstract factory pattern usually has a
+	specific method for each concrete type being returned (e.g. createCircle(), createSquare() etc). Alternatively you can have
+	a single method e.g. createShape(...).

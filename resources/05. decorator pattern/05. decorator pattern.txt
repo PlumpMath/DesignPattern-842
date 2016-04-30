@@ -1,0 +1,25 @@
+Scenario: 
+	The XYZ retail has decided to count the number of items, which satisfy the above strategies.
+
+Solution: 
+	You can apply the decorator design pattern around your strategy design pattern. Refer Q24 in Java section
+	for the decorator design pattern used in java.io.*. The decorator acts as a wrapper around the CheckStrategy objects
+	where by call the check(...) method on the CheckStrategy object and if it returns true then increment the counter. The
+	decorator design pattern can be used to provide additional functionality to an object of some kind. The key to a decorator
+	is that a decorator "wraps" the object decorated and looks to a client exactly the same as the object wrapped. This means
+	that the decorator implements the same interface as the object it decorates.
+
+Decorator design pattern: 
+	You can think of a decorator as a shell around the object decorated. The decorator catches
+	any message that a client sends to the object instead. The decorator may apply some action and then pass the message
+	it received on to the decorated object. That object probably returns a value to the decorator which may again apply an
+	action to that result, finally sending the (perhaps-modified) result to the original client. To the client the decorator is
+	invisible. It just sent a message and got a result. However the decorator had two chances to enhance the result returned.
+	
+	A decorator object’There is a subtle difference between the decorator pattern and the proxy
+	pattern is that, ts interface must conform to the interface of the component it decorates.
+	
+	
+	PROXY or DECORATOR?
+	decorator pattern --> enhance the functionality of the target object
+	proxy pattern --> control access to the target object

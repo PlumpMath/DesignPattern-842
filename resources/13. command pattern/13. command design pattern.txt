@@ -1,0 +1,17 @@
+Scenario: 
+	The stock control staff require a simplified calculator, which enable them to add and subtract stock counted
+	and also enable them to undo and redo their operations. This calculator will assist them with faster processing of stock
+	counting operations.
+
+Solution: 
+	This can be achieved by applying the command design pattern as shown below:
+
+Command pattern: 
+	The Command pattern is an object behavioral pattern that allows you to achieve complete
+	decoupling between the sender and the receiver. A sender is an object that invokes an operation, and a receiver is an
+	object that receives the request to execute a certain operation. With decoupling, the sender has no knowledge of the
+	Receiver's interface. The term request here refers to the command that is to be executed. The Command pattern also
+	allows you to vary when and how a request is fulfilled. At times it is necessary to issue requests to objects without
+	knowing anything about the operation being requested or the receiver of the request. In procedural languages, this type of
+	communication is accomplished via a call-back: a function that is registered somewhere to be called at a later point.
+	Commands are the object-oriented equivalent of call-backs and encapsulate the call-back function.

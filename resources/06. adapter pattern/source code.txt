@@ -1,0 +1,207 @@
+
+public interface CheckStrategy {
+	public boolean check(String word);
+	
+	// --> utilised by CountDecorator and not for every strategy impls
+	public int count();
+	public void reset();
+}
+
+
+/**
+ * This is an adapter class which provides default implementations to be
+ * extended not to be used and facilitates its subclasses to be adapted to each
+ * other. Throws an unchecked exception to indicate improper use.
+ */
+public class CheckStrategyAdapter implements CheckStrategy {
+	public boolean check(String word) {
+		throw new RuntimeException(
+				"Improper use of CheckStrategyAdapter class method check(String word)" );
+	}
+
+	public int count() {
+		throw new RuntimeException(
+				"Improper use of CheckStrategyAdapter class method count()");
+	}
+
+	public void reset() {
+		throw new RuntimeException(
+				"Improper use of CheckStrategyAdapter class method reset()");
+	}
+
+}
+
+
+public class LongerThan15 extends CheckStrategyAdapter {
+	public static final int LENGTH = 15; // constant
+
+	public boolean check(String description) {
+		if (description == null)
+			return false;
+		else
+			return description.length() > LENGTH;
+	}
+}
+
+another example
+
+/* the client class should instantiate adapter objects */
+/* by using a reference of this type */ 
+interface Stack<T>
+{
+  void push (T o);
+  T pop ();
+  T top ();
+}
+ 
+/* DoubleLinkedList is the adaptee class */
+class DList<T>
+{
+  public void insert (DNode pos, T o) { ... }
+  public void remove (DNode pos) { ... }
+ 
+  public void insertHead (T o) { ... }
+  public void insertTail (T o) { ... }
+ 
+  public T removeHead () { ... }
+  public T removeTail () { ... }
+ 
+  public T getHead () { ... }
+  public T getTail () { ... }
+}
+ 
+/* Adapt DList class to Stack interface is the adapter class */
+class DListImpStack<T> extends DList<T> implements Stack<T>
+{
+  public void push (T o) {
+    insertTail (o);
+  }
+ 
+  public T pop () {
+    return removeTail ();
+  }
+ 
+  public T top () {
+    return getTail ();
+  }
+}
+
+Another example
+
+// 구모델 인터페이스
+public interface OldtypeToy {
+    public void use();
+     
+    public void onPlug();       // 구모델의 충전 타입.
+    public String getName();
+}
+ 
+// 구모델 장난감
+public class OldToy implements OldtypeToy{
+    private String myName = "";
+     
+    public OldToy(String myName) {
+        this.myName = myName;
+    }
+     
+    @Override
+    public void use() {
+        System.out.println(myName+" : use this");
+    }
+ 
+    // 구모델은 플러그를 통해 충전 함.
+    @Override
+    public void onPlug() {
+        System.out.println(myName+" : plug on");
+    }
+ 
+    @Override
+    public String getName() {
+        return myName;
+    }
+      
+}
+ 
+ 
+// 신모델 인터페이스
+public interface NewtypeToy {
+    public void use();
+ 
+    public void onUSBCharge();  // 신모델의 충전타입.
+    public String getName();
+}
+ 
+ 
+// 신모델 장난감
+public class NewToy implements NewtypeToy {
+    private String myName = "";
+ 
+    public NewToy(String myName) {
+        this.myName = myName;
+    }
+ 
+    @Override
+    public void use() {
+        System.out.println(myName+" : use this");
+    }
+ 
+    // 신모델은 USB를 통해 충전 합니다.
+    @Override
+    public void onUSBCharge() {
+        System.out.println(myName+" : on USB charge");
+    }
+     
+    @Override
+    public String getName() {
+        return myName;
+    }
+}
+ 
+// 신모델과 똑같은 충전방식을 지원하는 구모델 어댑터
+public class ToyAdater implements NewtypeToy{
+    OldtypeToy oldtype;
+    // 구모델을 생성자를 통해 받음
+    public ToyAdater(OldtypeToy oldtype) {
+        this.oldtype = oldtype;
+    }
+     
+    @Override
+    public void use() {
+        oldtype.use();
+    }
+ 
+    // 구모델 충전 타입을 USB로 전환 후 충전 함.
+    @Override
+    public void onUSBCharge() {
+        System.out.println(oldtype.getName() + "change USB MODE !!");
+        oldtype.onPlug();
+    }
+ 
+    @Override
+    public String getName() {
+        return oldtype.getName();
+    }
+}
+ 
+ 
+// 프로그램 실행
+public class StartApp {
+    public static void main (String ar[]) {
+        // 구 모델의 장난감
+        OldtypeToy oldToy = new OldToy("old");
+        // 신 모델의 장난감
+        NewtypeToy newToy = new NewToy("new");
+        // 구 모델의 장난감을 어댑터를 통해 신모델처럼 사용
+        ToyAdater adater = new ToyAdater(oldToy);
+         
+        oldToy.use();
+        newToy.use();
+ 
+        // 신모델 충전
+        newToy.onUSBCharge();
+ 
+        // 구모델을 신모델 충전으로 사용하기 위해
+        // 어뎁터에 추가했으므로, 어뎁터의 충전을 호출 함
+        adater.onUSBCharge();
+    }
+}
